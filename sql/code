@@ -1,0 +1,46 @@
+-- Création de la table Client
+CREATE TABLE Client (
+    id_client INT PRIMARY KEY AUTO_INCREMENT,
+    nom VARCHAR(50),
+    prenom VARCHAR(50),
+    email VARCHAR(100) UNIQUE,
+    mot_de_passe VARCHAR(255),
+    type_client ENUM('ancien', 'nouveau')
+);
+
+-- Création de la table Article
+CREATE TABLE Article (
+    id_article INT PRIMARY KEY AUTO_INCREMENT,
+    nom_article VARCHAR(100),
+    marque VARCHAR(50),
+    prix_unitaire DECIMAL(10,2),
+    prix_gros DECIMAL(10,2),
+    quantite_gros INT,
+    stock_disponible INT
+);
+
+-- Création de la table Commande
+CREATE TABLE Commande (
+    id_commande INT PRIMARY KEY AUTO_INCREMENT,
+    id_client INT,
+    date_commande DATE,
+    FOREIGN KEY (id_client) REFERENCES Client(id_client)
+);
+
+-- Création de la table Commande_Article (association plusieurs-à-plusieurs)
+CREATE TABLE Commande_Article (
+    id_commande INT,
+    id_article INT,
+    quantite INT,
+    PRIMARY KEY (id_commande, id_article),
+    FOREIGN KEY (id_commande) REFERENCES Commande(id_commande),
+    FOREIGN KEY (id_article) REFERENCES Article(id_article)
+);
+
+-- Création de la table Admin
+CREATE TABLE Admin (
+    id_admin INT PRIMARY KEY AUTO_INCREMENT,
+    nom VARCHAR(50),
+    email VARCHAR(100) UNIQUE,
+    mot_de_passe VARCHAR(255)
+);
