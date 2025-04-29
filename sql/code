@@ -1,46 +1,66 @@
--- Création de la table Client
-CREATE TABLE Client (
-    id_client INT PRIMARY KEY AUTO_INCREMENT,
-    nom VARCHAR(50),
-    prenom VARCHAR(50),
-    email VARCHAR(100) UNIQUE,
-    mot_de_passe VARCHAR(255),
-    type_client ENUM('ancien', 'nouveau')
+-- Création de la base
+CREATE DATABASE IF NOT EXISTS shopping_db;
+USE shopping_db;
+
+-- Table des utilisateurs (clients)
+CREATE TABLE client (
+    id_client INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(100),
+    prenom VARCHAR(100),
+    email VARCHAR(150) UNIQUE NOT NULL,
+    mot_de_passe VARCHAR(100) NOT NULL,
+    type_client ENUM('ancien', 'nouveau') NOT NULL
 );
 
--- Création de la table Article
-CREATE TABLE Article (
-    id_article INT PRIMARY KEY AUTO_INCREMENT,
-    nom_article VARCHAR(100),
-    marque VARCHAR(50),
-    prix_unitaire DECIMAL(10,2),
-    prix_gros DECIMAL(10,2),
+-- Table des administrateurs
+CREATE TABLE administrateur (
+    id_admin INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(100),
+    email VARCHAR(150) UNIQUE NOT NULL,
+    mot_de_passe VARCHAR(100) NOT NULL
+);
+
+-- Table des marques
+CREATE TABLE marque (
+    id_marque INT AUTO_INCREMENT PRIMARY KEY,
+    nom_marque VARCHAR(100) UNIQUE NOT NULL
+);
+
+-- Table des articles
+CREATE TABLE article (
+    id_article INT AUTO_INCREMENT PRIMARY KEY,
+    nom_article VARCHAR(100) NOT NULL,
+    prix_unitaire DECIMAL(10, 2) NOT NULL,
+    prix_gros DECIMAL(10, 2),
     quantite_gros INT,
-    stock_disponible INT
+    id_marque INT,
+    FOREIGN KEY (id_marque) REFERENCES marque(id_marque)
 );
 
--- Création de la table Commande
-CREATE TABLE Commande (
-    id_commande INT PRIMARY KEY AUTO_INCREMENT,
+-- Table des commandes
+CREATE TABLE commande (
+    id_commande INT AUTO_INCREMENT PRIMARY KEY,
     id_client INT,
-    date_commande DATE,
-    FOREIGN KEY (id_client) REFERENCES Client(id_client)
+    date_commande DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_client) REFERENCES client(id_client)
 );
 
--- Création de la table Commande_Article (association plusieurs-à-plusieurs)
-CREATE TABLE Commande_Article (
+-- Table de jointure commande-article
+CREATE TABLE commande_article (
+    id_commande_article INT AUTO_INCREMENT PRIMARY KEY,
     id_commande INT,
     id_article INT,
-    quantite INT,
-    PRIMARY KEY (id_commande, id_article),
-    FOREIGN KEY (id_commande) REFERENCES Commande(id_commande),
-    FOREIGN KEY (id_article) REFERENCES Article(id_article)
+    quantite INT NOT NULL,
+    note TEXT,
+    FOREIGN KEY (id_commande) REFERENCES commande(id_commande),
+    FOREIGN KEY (id_article) REFERENCES article(id_article)
 );
 
--- Création de la table Admin
-CREATE TABLE Admin (
-    id_admin INT PRIMARY KEY AUTO_INCREMENT,
-    nom VARCHAR(50),
-    email VARCHAR(100) UNIQUE,
-    mot_de_passe VARCHAR(255)
+-- Table des remises
+CREATE TABLE remise (
+    id_remise INT AUTO_INCREMENT PRIMARY KEY,
+    description TEXT,
+    pourcentage DECIMAL(5,2),
+    id_article INT,
+    FOREIGN KEY (id_article) REFERENCES article(id_article)
 );
