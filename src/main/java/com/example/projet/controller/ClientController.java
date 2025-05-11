@@ -62,4 +62,13 @@ public class ClientController {
         ClientDAO dao = new ClientDAO();
         return dao.create(client);
     }
+
+    public void modifierQuantitePanier(int idArticle, int quantite) {
+        for (ArticlePanier ap : panier) {
+            if (ap.getArticle().getId() == idArticle) {
+                ap.setQuantite(quantite);
+                break;
+            }
+        }
+    }
 }

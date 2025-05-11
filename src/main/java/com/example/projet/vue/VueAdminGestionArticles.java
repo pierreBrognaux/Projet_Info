@@ -17,27 +17,35 @@ public class VueAdminGestionArticles extends JPanel {
         titre.setForeground(Color.WHITE);
         add(titre, BorderLayout.NORTH);
 
-        JPanel centre = new JPanel(new GridLayout(4, 1, 20, 20));
-        centre.setBorder(BorderFactory.createEmptyBorder(50, 100, 50, 100));
+        JPanel centre = new JPanel(new GridLayout(6, 1, 20, 20));
+        centre.setBorder(BorderFactory.createEmptyBorder(40, 100, 40, 100));
 
-        JButton ajouter = new JButton("➕ Ajouter un produit");
-        JButton supprimer = new JButton("🗑 Supprimer un produit");
-        JButton modifier = new JButton("✏️ Modifier un produit");
-        JButton statistiques = new JButton("📊 Voir les statistiques de vente");
+        JButton ajouterArticle = new JButton("➕ Ajouter un article");
+        JButton supprimerArticle = new JButton("🗑 Supprimer un article");
+        JButton modifierArticle = new JButton("✏️ Modifier un article");
+        JButton statistiques = new JButton("📊 Voir les statistiques");
 
-        ajouter.addActionListener(e -> navigation.afficherAjoutProduit());
-        supprimer.addActionListener(e -> navigation.afficherSuppressionProduit());
-        modifier.addActionListener(e -> navigation.afficherModificationProduit());
+        JButton ajouterMarque = new JButton("🏷 Ajouter une marque");
+        JButton supprimerMarque = new JButton("❌ Supprimer une marque");
+
+        ajouterArticle.addActionListener(e -> navigation.afficherAjoutProduit());
+        supprimerArticle.addActionListener(e -> navigation.afficherSuppressionProduit());
+        modifierArticle.addActionListener(e -> navigation.afficherModificationProduit());
         statistiques.addActionListener(e -> navigation.afficherStatistiques());
 
-        centre.add(ajouter);
-        centre.add(modifier);
-        centre.add(supprimer);
+        ajouterMarque.addActionListener(e -> navigation.afficherAjoutMarque());
+        supprimerMarque.addActionListener(e -> navigation.afficherSuppressionMarque());
+
+        centre.add(ajouterArticle);
+        centre.add(modifierArticle);
+        centre.add(supprimerArticle);
+        centre.add(ajouterMarque);
+        centre.add(supprimerMarque);
         centre.add(statistiques);
 
         add(centre, BorderLayout.CENTER);
 
-        JButton retour = new JButton("← Retour à la connexion");
+        JButton retour = new JButton("← Déconnexion");
         retour.addActionListener(e -> navigation.afficherConnexion());
         add(retour, BorderLayout.SOUTH);
     }
