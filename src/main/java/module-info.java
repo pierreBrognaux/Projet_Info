@@ -11,6 +11,8 @@ module com.example.projet {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
     requires java.sql;
+    requires java.desktop;
+    requires org.jfree.jfreechart;
 
     opens com.example.projet to javafx.fxml;
     exports com.example.projet;

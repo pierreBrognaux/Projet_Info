@@ -1,19 +1,23 @@
 package com.example.projet.controller;
 
+import com.example.projet.dao.ArticleDAO;
 import com.example.projet.dao.CommandeDAO;
+import com.example.projet.modele.Article;
 import com.example.projet.modele.ArticlePanier;
 import com.example.projet.modele.Client;
 import com.example.projet.modele.Commande;
+import com.example.projet.modele.CommandeArticle;
 
-import java.util.Date;
 import java.util.List;
 
 public class CommandeController {
 
     private final CommandeDAO commandeDAO;
+    private final ArticleDAO articleDAO;
 
     public CommandeController() {
         this.commandeDAO = new CommandeDAO();
+        this.articleDAO = new ArticleDAO();
     }
 
     /**
@@ -42,8 +46,17 @@ public class CommandeController {
         return commandeDAO.getArticlesDescriptionPourCommande(idCommande);
     }
 
-
     public List<Commande> getCommandesPourClient(Client client) {
         return commandeDAO.findByClientId(client.getId());
+    }
+
+    // ✅ Nouvelle méthode : liste des articles pour une commande
+    public List<CommandeArticle> getCommandeArticlesByCommande(int idCommande) {
+        return commandeDAO.getCommandeArticlesByCommande(idCommande);
+    }
+
+    // ✅ Nouvelle méthode : récupérer un article par son ID
+    public Article getArticleById(int idArticle) {
+        return articleDAO.find(idArticle);
     }
 }

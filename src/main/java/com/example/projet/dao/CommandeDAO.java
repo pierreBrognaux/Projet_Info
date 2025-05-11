@@ -2,6 +2,7 @@ package com.example.projet.dao;
 
 import com.example.projet.modele.Commande;
 import com.example.projet.modele.ArticlePanier;
+import com.example.projet.modele.CommandeArticle;
 import java.sql.*;
 import java.util.*;
 
@@ -102,6 +103,28 @@ public class CommandeDAO implements DAO<Commande> {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public List<CommandeArticle> getCommandeArticlesByCommande(int idCommande) {
+        List<CommandeArticle> liste = new ArrayList<>();
+        try {
+            String sql = "SELECT * FROM commande_article WHERE id_commande = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, idCommande);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                CommandeArticle ca = new CommandeArticle();
+                ca.setId(rs.getInt("id_commande_article"));
+                ca.setIdCommande(rs.getInt("id_commande"));
+                ca.setIdArticle(rs.getInt("id_article"));
+                ca.setQuantite(rs.getInt("quantite"));
+                ca.setNote(rs.getString("note"));
+                liste.add(ca);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return liste;
     }
 
 

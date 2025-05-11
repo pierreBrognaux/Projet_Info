@@ -1,0 +1,286 @@
+@startuml
+
+' ======================= CLASSES METIER =======================
+class Utilisateur {
+  - idUtilisateur : int
+  - nom : String
+  - email : String
+  - motDePasse : String
+  --
+  + seConnecter(email : String, motDePasse : String) : boolean
+  + changerMotDePasse(nouveau : String) : void
+  + deconnexion() : void
+}
+
+class Client {
+  - historiqueCommandes : List<int>
+  - typeClient : String
+  --
+  + commanderArticle(idArticle : int, qte : int) : void
+  + voirHistorique() : void
+  + noterCommande(idCommande : int, note : int) : void
+  + ajouterAuPanier(idArticle : int, qte : int) : void
+}
+
+class Administrateur {
+  - poste : String
+  --
+  + ajouterArticle(article : Article) : void
+  + modifierArticle(article : Article) : void
+  + supprimerArticle(idArticle : int) : void
+  + ajouterReduction(reduction : Reduction) : void
+  + afficherStatistiquesVentes() : StatistiqueVente
+}
+
+class Article {
+  - idArticle : int
+  - nom : String
+  - description : String
+  - prixUnitaire : double
+  - prixVrac : double
+  - quantiteVrac : int
+  - stock : int
+  - idMarque : int
+  --
+  + estEligibleVrac(qte : int) : boolean
+  + calculerPrixTotal(qte : int) : double
+  + mettreAJourStock(qte : int) : void
+}
+
+class Marque {
+  - idMarque : int
+  - nomMarque : String
+  --
+  + afficherArticles() : List<Article>
+}
+
+class Commande {
+  - idCommande : int
+  - dateCommande : LocalDate
+  - idClient : int
+  - total : double
+  - etat : String
+  --
+  + ajouterArticle(idArticle : int, qte : int) : void
+  + calculerTotal() : double
+  + genererFacture() : String
+  + changerEtat(nouvelEtat : String) : void
+}
+
+class LigneCommande {
+  - idLigne : int
+  - idCommande : int
+  - idArticle : int
+  - quantite : int
+  - prixUnitaire : double
+  --
+  + calculerSousTotal() : double
+}
+
+class Reduction {
+  - idReduction : int
+  - description : String
+  - montant : double
+  - condition : String
+  --
+  + estApplicable(article : Article, qte : int) : boolean
+  + appliquerReduction(prix : double) : double
+}
+
+
+' ======================= DAO =======================
+interface GenericDAO<T> {
+  + findAll() : List<T>
+  + findById(id : int) : T
+  + insert(obj : T) : boolean
+  + update(obj : T) : boolean
+  + delete(id : int) : boolean
+}
+
+class UtilisateurDAO {
+  + findByEmail(email : String) : Utilisateur
+  + verifierConnexion(email : String, mdp : String) : boolean
+}
+
+class ClientDAO {
+  + findAll() : List<Client>
+  + findById(id : int) : Client
+  + insert(client : Client) : boolean
+  + update(client : Client) : boolean
+  + delete(id : int) : boolean
+}
+
+class AdministrateurDAO {
+  + findAll() : List<Administrateur>
+  + findById(id : int) : Administrateur
+  + insert(admin : Administrateur) : boolean
+  + update(admin : Administrateur) : boolean
+  + delete(id : int) : boolean
+}
+
+class ArticleDAO {
+  + findAll() : List<Article>
+  + findById(id : int) : Article
+  + insert(article : Article) : boolean
+  + update(article : Article) : boolean
+  + delete(id : int) : boolean
+}
+
+class MarqueDAO {
+  + findAll() : List<Marque>
+  + findById(id : int) : Marque
+}
+
+class CommandeDAO {
+  + findAll() : List<Commande>
+  + findById(id : int) : Commande
+  + insert(commande : Commande) : boolean
+  + update(commande : Commande) : boolean
+  + delete(id : int) : boolean
+}
+
+class StatistiqueVenteDAO {
+  + getStatsParPeriode(periode : String) : StatistiqueVente
+}
+
+
+' ======================= CONTROLLERS =======================
+class UtilisateurController {
+  + connexion(email : String, motDePasse : String) : boolean
+  + inscription(nom : String, email : String, mdp : String) : boolean
+}
+
+class ClientController {
+  + commander(idClient : int) : void
+  + afficherHistorique(idClient : int) : void
+  + noterCommande(idCommande : int, note : int) : void
+}
+
+class AdministrateurController {
+  + gererArticles() : void
+  + consulterStatistiques() : void
+  + ajouterReduction(reduction : Reduction) : void
+}
+
+class ArticleController {
+  + afficherCatalogue() : void
+  + rechercherArticles(marque : String) : List<Article>
+  + afficherDetailArticle(idArticle : int) : Article
+}
+
+class CommandeController {
+  + creerCommande(idClient : int) : void
+  + ajouterArticleCommande(idCommande : int, idArticle : int, qte : int) : void
+  + validerCommande(idCommande : int) : void
+}
+
+class StatistiquesController {
+  + genererStatistiques() : void
+  + afficherHistogramme() : void
+}
+class MarqueController {
+  + getToutesLesMarques() : List<Marque>
+  + getMarque(id : int) : Marque
+}
+
+
+' ======================= VUES =======================
+class VueConnexion {
+  + afficherFormulaireConnexion() : void
+  + recupererIdentifiants() : String[]
+  + afficherMessageErreur(msg : String) : void
+}
+
+class VueInscription {
+  + afficherFormulaireInscription() : void
+  + recupererInformations() : String[]
+  + afficherConfirmation() : void
+}
+
+class VueCatalogue {
+  + afficherListeArticles(articles : List<Article>) : void
+  + afficherDetailArticle(article : Article) : void
+  + afficherResultatsRecherche(articles : List<Article>) : void
+}
+
+class VueCommande {
+  + afficherCommande(commandes : List<Commande>) : void
+  + afficherFacture(facture : String) : void
+}
+
+class VueHistoriqueCommandes {
+  + afficherHistorique(commandes : List<Commande>) : void
+}
+
+class VuePanier {
+  + afficherPanier(lignes : List<LigneCommande>) : void
+  + viderPanier() : void
+}
+
+class VueFacture {
+  + afficherFacture(facture : String) : void
+  + exporterPDF() : void
+}
+
+class VueAdminGestionArticles {
+  + afficherListeGestion() : void
+  + afficherFormulaireAjout() : void
+  + afficherFormulaireEdition(article : Article) : void
+}
+
+class VueAdminStatsVentes {
+  + afficherGraphiques() : void
+  + afficherTableauStats(stats : StatistiqueVente) : void
+}
+
+
+' ======================= MAIN =======================
+class Main {
+  + main(args : String[]) : void
+}
+
+' ======================= RELATIONS =======================
+Utilisateur <|-- Client
+Utilisateur <|-- Administrateur
+
+Client "1" -- "0..*" Commande : passe >
+Commande "1" -- "0..*" LigneCommande : contient >
+LigneCommande "1" -- "1" Article : concerne >
+Article "1" -- "1" Marque : appartient à >
+Commande --> Reduction : applique >
+
+UtilisateurDAO <-- UtilisateurController
+ClientDAO <-- ClientController
+AdministrateurDAO <-- AdministrateurController
+ArticleDAO <-- ArticleController
+CommandeDAO <-- CommandeController
+StatistiqueVenteDAO <-- StatistiquesController
+MarqueDAO <-- MarqueController
+
+VueConnexion <-- UtilisateurController
+VueInscription <-- UtilisateurController
+VueCatalogue <-- ArticleController
+VueCommande <-- CommandeController
+VueHistoriqueCommandes <-- ClientController
+VuePanier <-- ClientController
+VueFacture <-- CommandeController
+VueAdminGestionArticles <-- AdministrateurController
+VueAdminStatsVentes <-- StatistiquesController
+
+
+UtilisateurController <-- Main
+ClientController <-- Main
+AdministrateurController <-- Main
+ArticleController <-- Main
+CommandeController <-- Main
+StatistiquesController <-- Main
+MarqueController <-- Main
+
+GenericDAO  <|.. UtilisateurDAO
+GenericDAO  <|.. ClientDAO
+GenericDAO  <|.. AdministrateurDAO
+GenericDAO  <|.. ArticleDAO
+GenericDAO  <|.. CommandeDAO
+GenericDAO  <|.. StatistiqueVenteDAO
+GenericDAO <|.. MarqueDAO
+@enduml

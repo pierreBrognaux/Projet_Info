@@ -78,7 +78,7 @@ public class ClientDAO implements DAO<Client> { // 🔁 Implémente bien l'inter
         }
     }
 
-    // Tu peux laisser ces méthodes vides ou les implémenter plus tard
+    // 🔁 Tu peux laisser ces méthodes vides ou les implémenter plus tard
     @Override public Client find(int id) { return null; }
     @Override public List<Client> findAll() { return null; }
     @Override public boolean update(Client obj) { return false; }

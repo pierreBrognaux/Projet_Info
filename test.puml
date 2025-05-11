@@ -1,0 +1,51 @@
+@startuml
+
+class VueConnexion {
+  + afficherFormulaireConnexion() : void
+  + recupererIdentifiants() : String[]
+  + afficherMessageErreur(msg : String) : void
+}
+
+class VueInscription {
+  + afficherFormulaireInscription() : void
+  + recupererInformations() : String[]
+  + afficherConfirmation() : void
+}
+
+class VueCatalogue {
+  + afficherListeArticles(articles : List<Article>) : void
+  + afficherDetailArticle(article : Article) : void
+  + afficherResultatsRecherche(articles : List<Article>) : void
+}
+
+class VueCommande {
+  + afficherCommande(commandes : List<Commande>) : void
+  + afficherFacture(facture : String) : void
+}
+
+class VueHistoriqueCommandes {
+  + afficherHistorique(commandes : List<Commande>) : void
+}
+
+class VuePanier {
+  + afficherPanier(lignes : List<LigneCommande>) : void
+  + viderPanier() : void
+}
+
+class VueFacture {
+  + afficherFacture(facture : String) : void
+  + exporterPDF() : void
+}
+
+class VueAdminGestionArticles {
+  + afficherListeGestion() : void
+  + afficherFormulaireAjout() : void
+  + afficherFormulaireEdition(article : Article) : void
+}
+
+class VueAdminStatsVentes {
+  + afficherGraphiques() : void
+  + afficherTableauStats(stats : StatistiqueVente) : void
+}
+
+@enduml

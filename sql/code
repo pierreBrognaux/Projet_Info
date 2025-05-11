@@ -1,8 +1,11 @@
--- Création de la base
+-- Base et sélection
 CREATE DATABASE IF NOT EXISTS shopping_db;
 USE shopping_db;
 
--- Table des utilisateurs (clients)
+-- Suppression des anciennes tables si besoin
+DROP TABLE IF EXISTS commande_article, commande, remise, article, marque, client, administrateur;
+
+-- Table des clients
 CREATE TABLE client (
     id_client INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(100),
@@ -56,7 +59,7 @@ CREATE TABLE commande_article (
     FOREIGN KEY (id_article) REFERENCES article(id_article)
 );
 
--- Table des remises
+-- Table des remises (optionnelle)
 CREATE TABLE remise (
     id_remise INT AUTO_INCREMENT PRIMARY KEY,
     description TEXT,
@@ -64,3 +67,40 @@ CREATE TABLE remise (
     id_article INT,
     FOREIGN KEY (id_article) REFERENCES article(id_article)
 );
+
+-- ----------------------
+-- 📥 Données de test
+-- ----------------------
+
+-- Clients
+INSERT INTO client (nom, prenom, email, mot_de_passe, type_client) VALUES
+('Dupont', 'Alice', 'alice@example.com', '1234', 'ancien'),
+('Martin', 'Bob', 'bob@example.com', '1234', 'nouveau');
+
+-- Administrateurs
+INSERT INTO administrateur (nom, email, mot_de_passe) VALUES
+('Admin1', 'admin@example.com', 'admin');
+
+-- Marques
+INSERT INTO marque (nom_marque) VALUES ('Sony'), ('Samsung'), ('Apple');
+
+-- Articles
+INSERT INTO article (nom_article, prix_unitaire, prix_gros, quantite_gros, id_marque) VALUES
+('Écouteurs', 15.00, 120.00, 10, 1),
+('Chargeur', 20.00, NULL, NULL, 2),
+('Clavier Bluetooth', 35.00, 300.00, 10, 3),
+('Souris', 10.00, 80.00, 10, 1),
+('Batterie externe', 25.00, NULL, NULL, 2);
+
+-- Exemple de commande passée (facultatif si tu veux tester DAO Commande manuellement)
+INSERT INTO commande (id_client) VALUES (1);
+
+-- Commande avec articles
+INSERT INTO commande_article (id_commande, id_article, quantite, note) VALUES
+(1, 1, 2, 'Fonctionne très bien.'),
+(1, 4, 1, 'Livraison rapide.');
+
+-- Remises
+INSERT INTO remise (description, pourcentage, id_article) VALUES
+('Promo été', 10.00, 3),
+('Remise fidélité', 5.00, 1);
